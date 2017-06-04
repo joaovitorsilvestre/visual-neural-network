@@ -19,6 +19,7 @@
     "numjs": "^0.13.1",
     "vectorious": "^4.8.1",
     "vue": "^2.2.6",
+    "vue-chartjs": "^2.6.4",
     "vue-link-popover": "^2.0.2",
     "vue-round-filter": "^1.1.2",
     "vue-router": "^2.3.1",

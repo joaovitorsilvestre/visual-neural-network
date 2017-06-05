@@ -12,36 +12,26 @@ class Neural {
     this.onodes = outputNodes
     this.lr = learningRate
 
-    this.wih = np.random([this.hnodes, this.inodes])
-    this.who = np.random([this.onodes, this.hnodes])
-  }
-
-  query (inputList) {
-    const inputs = np.array(inputList).reshape(inputList.lenght, 1)
-
-    const hiddenInputs = np.dot(this.wih, inputs)
-    const hiddenOutputs = np.sigmoid(hiddenInputs)
-
-    const finalInputs = np.dot(this.who, hiddenOutputs)
-    const finalOutputs = np.multiply(finalInputs)
-
-    return finalOutputs
+    this.wih = np.array([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.7, 0.8, 0.9]])
+    this.who = np.array([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.7, 0.8, 0.9]])
+    // this.wih = np.random([this.hnodes, this.inodes])
+    // this.who = np.random([this.onodes, this.hnodes])
   }
 
   partial (inputList) {
     const outputsFirstLayer = np.sigmoid(inputList)
-    console.log('outputsFirstLayer', outputsFirstLayer.tolist())
-    console.log('wih', this.wih.tolist())
-    const outputsFirstWeight = this.multiply(outputsFirstLayer, this.wih.tolist())
-    console.log('outputsFirstWeight', outputsFirstWeight.tolist())
+    const outputsFirstWeight = this.multiply(outputsFirstLayer, this.wih.T).T
 
-    const inputsHiddenLayer = np.dot(outputsFirstLayer, this.wih.T)
+    const inputsHiddenLayer = np.dot(outputsFirstLayer, this.wih)
     const outputsHiddenLayer = np.sigmoid(inputsHiddenLayer)
 
-    const outputsSecondWeight = this.multiply(outputsHiddenLayer, this.who.tolist())
-    const inputsOutputLayer = np.dot(outputsHiddenLayer, this.who.T)
+    const outputsSecondWeight = this.multiply(outputsHiddenLayer, this.who.T)
+    console.log('outputsSecondWeight', outputsSecondWeight.tolist())
+    const inputsOutputLayer = np.dot(outputsHiddenLayer, this.who)
+    console.log('inputsOutputLayer', inputsOutputLayer.tolist())
 
     const outputsOutputLayer = np.sigmoid(inputsOutputLayer)
+    console.log('outputsOutputLayer', outputsOutputLayer.tolist())
 
     return {
       outputsFirstLayer: outputsFirstLayer.tolist(),
@@ -62,21 +52,9 @@ class Neural {
     b.forEach(row => {
       let r = []
       r[0] = row[0] * a[0]
-      r[1] = row[2] * a[1]
+      r[1] = row[1] * a[1]
       r[2] = row[2] * a[2]
       final.push(r)
-    })
-    return np.array(final)
-  }
-
-  sumAllCols (m) {
-    let final = []
-    m.tolist().forEach(row => {
-      let all = 0
-      row.forEach(col => {
-        all += col
-      })
-      final.push(all)
     })
     return np.array(final)
   }

@@ -20,13 +20,13 @@
           input.form-control(type="text", :value="inputs[index]")
       .col-md-1.layer
         span.item(v-for="(n, index) in firstLayer")
-          neuron(:ref="'nFirstLayer' + index", :text="index")
+          neuron(:ref="'nFirstLayer' + index", :text="'f(' + inputs[index] + ')'")
       .col-md-8.layer
         span.item(v-for="(n, index) in hiddenLayer")
-          neuron(:ref="'nHiddenLayer' + index", :text="index")
+          neuron(:ref="'nHiddenLayer' + index", :text="'f(' + round(hiddenLayerInputs[index]) + ')'")
       .col-md-1.layer
         span.item(v-for="(n, index) in outputLayer")
-          neuron(:ref="'nOutputLayer' + index", :text="index")
+          neuron(:ref="'nOutputLayer' + index", :text="'f(' + round(outputLayerInputs[index]) + ')'")
       .col-md-1.layer
         span.item(v-for="(n, index) in outputLayer")
           label.form-control(type="text") {{ round(outputs[index]) }}
@@ -46,7 +46,9 @@ export default {
   data () {
     return {
       connections: [],
-      inputs: [3, 0.22, 0.53],
+      inputs: [2, 1, 0.2],
+      hiddenLayerInputs: [0, 0, 0],
+      outputLayerInputs: [0, 0, 0],
       outputs: [],
       mousePosX: 0,
       neural: new Neural(this.firstLayer, this.hiddenLayer, this.outputLayer)
@@ -54,6 +56,8 @@ export default {
   },
   mounted () {
     const r = this.neural.partial(this.inputs)
+    this.hiddenLayerInputs = r.inputsHiddenLayer
+    this.outputLayerInputs = r.inputsOutputLayer
     this.outputs = r.outputsOutputLayer
 
     let id = 0
@@ -75,8 +79,8 @@ export default {
         this.connections.push({
           pos: [this.getPos(this.$refs['nHiddenLayer' + nh][0].$el), this.getPos(this.$refs['nOutputLayer' + no][0].$el)],
           input: r.outputsHiddenLayer[nh],
-          output: 5,
-          weight: 0,
+          output: r.outputsSecondWeight[nh][no],
+          weight: this.neural.who.tolist()[no][nh],
           id: 'conecction' + id
         })
         id++

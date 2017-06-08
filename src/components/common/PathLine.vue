@@ -27,7 +27,11 @@ export default {
       return 'M' + this.path
     },
     posMouse () {
-      return (this.mousePosX - this.initial)
+      const x = this.path[0][0] < this.path[1][0] ? this.path[0][0] - this.path[1][0] : this.path[1][0] - this.path[0][0]
+      const y = this.path[0][1] > this.path[1][1] ? this.path[0][1] - this.path[1][1] : this.path[1][1] - this.path[0][1]
+      const h = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
+      let pos = ((this.initial - this.mousePosX) * 100) / x
+      return (pos / 100) * h
     },
     size () {
       return {
